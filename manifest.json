@@ -1,0 +1,51 @@
+{
+  "manifest_version": 3,
+  "name": "Soop Extension for clippers",
+  "description": "This is a Soop Extension for clippers.",
+  "version": "1.0",
+  "action": {
+    "default_popup": "popup/popup.html"
+  },
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://vod.afreecatv.com/*"
+      ],
+      "js": [
+        "content_in_clip.js"
+      ]
+    },
+    {
+      "matches": [
+        "https://bj.afreecatv.com/*/vods/myclip"
+      ],
+      "js": [
+        "content_my_clips.js"
+      ]
+    },
+    {
+      "matches": [
+        "https://www.afreecatv.com/*"
+      ],
+      "js": [
+        "content_main_page_to_vod.js"
+      ]
+    },
+    {
+      "matches": [
+        "https://stbbs.afreecatv.com/vodclip/*"
+      ],
+      "js": [
+        "content_edit_clip.js"
+      ]
+    }
+  ]
+}
