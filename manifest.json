@@ -25,7 +25,8 @@
     },
     {
       "matches": [
-        "https://bj.afreecatv.com/*/vods/myclip"
+        "https://bj.afreecatv.com/*/vods/*",
+        "https://bj.afreecatv.com/*/vods"
       ],
       "js": [
         "content_my_clips.js"
