@@ -17,7 +17,8 @@
   "content_scripts": [
     {
       "matches": [
-        "https://vod.afreecatv.com/*"
+        "https://vod.afreecatv.com/*",
+        "https://vod.sooplive.co.kr/player/*"
       ],
       "js": [
         "content_in_clip.js"
@@ -26,7 +27,8 @@
     {
       "matches": [
         "https://bj.afreecatv.com/*/vods/*",
-        "https://bj.afreecatv.com/*/vods"
+        "https://bj.afreecatv.com/*/vods",
+        "https://ch.sooplive.co.kr/*/vods*"
       ],
       "js": [
         "content_my_clips.js"
@@ -34,7 +36,8 @@
     },
     {
       "matches": [
-        "https://www.afreecatv.com/*"
+        "https://www.afreecatv.com/*",
+        "https://www.sooplive.co.kr/*"
       ],
       "js": [
         "content_main_page_to_vod.js"
@@ -42,7 +45,8 @@
     },
     {
       "matches": [
-        "https://stbbs.afreecatv.com/vodclip/*"
+        "https://stbbs.afreecatv.com/vodclip/*",
+        "https://stbbs.sooplive.co.kr/vodclip/*"
       ],
       "js": [
         "content_edit_clip.js"
