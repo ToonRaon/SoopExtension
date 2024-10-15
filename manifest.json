@@ -51,6 +51,14 @@
       "js": [
         "content_edit_clip.js"
       ]
+    },
+    {
+      "matches": [
+        "https://play.sooplive.co.kr/*"
+      ],
+      "js": [
+        "content_live.js"
+      ]
     }
   ]
 }
