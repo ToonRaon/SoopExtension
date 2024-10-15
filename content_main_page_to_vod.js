@@ -1,18 +1,19 @@
 const observer = new MutationObserver((mutations) => {
   mutations.forEach((mutation) => {
-    const preferBjLinks = document.querySelectorAll(".prefer_bj a");
+    const preferBjLinks = document.querySelectorAll(".side_list a");
     console.log(preferBjLinks.length);
 
     preferBjLinks.forEach((preferBjLink) => {
       let bjUrl = preferBjLink.getAttribute("href");
 
-      bjUrl = bjUrl.replace("play.afreecatv.com", "bj.afreecatv.com"); // 생방 채널 예외 처리
+      bjUrl = bjUrl.replace("play.sooplive.co.kr", "ch.sooplive.co.kr"); // 생방 채널 예외 처리
 
       if (!preferBjLink.querySelector(".vod-button")) {
         const vodButton = document.createElement("button");
+        const isLive = preferBjLink.querySelector(".views");
         vodButton.textContent = "VOD";
         vodButton.className = "vod-button";
-        vodButton.style.marginLeft = "8px";
+        vodButton.style.marginLeft = isLive ? "8px" : "auto";
         vodButton.style.cursor = "pointer";
         vodButton.style.color = "#007bff";
         vodButton.style.background = "none";
@@ -23,13 +24,10 @@ const observer = new MutationObserver((mutations) => {
         vodButton.onclick = (e) => {
           e.preventDefault();
           e.stopPropagation();
-          window.open(`${bjUrl}/vods`, '_blank');
+          window.open(`${bjUrl}/vods/review`, '_blank');
         };
 
-        const pTag = preferBjLink.querySelector("p");
-        if (pTag) {
-          pTag.parentNode.insertBefore(vodButton, pTag.nextSibling);
-        }
+        preferBjLink.appendChild(vodButton);
       }
     });
   });
