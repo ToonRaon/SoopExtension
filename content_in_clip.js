@@ -1,87 +1,44 @@
-let isDone = false;
-let lastUrl = location.href;
+let vodStartTime = undefined;
+let timelineObserver = undefined;
+let cursorObserver = undefined;
 
 const observer = new MutationObserver((mutations) => {
   mutations.forEach(() => {
-    const viewerCountElement = document.querySelector(".broadcast_viewer_cnt");
+    if (!document.querySelector('.realtime')) {
+      addRealtimeElement();
+    }
 
-    if (viewerCountElement && !isDone) {
-      const infoButton = document.querySelector(".vod_info_add");
+    if (!timelineObserver) {
+      const currentTimeElement = document.querySelector(".time-current");
+      const durationElement = document.querySelector(".time-duration");
 
-      if (infoButton) {
-        isDone = true;
-        observer.disconnect();
+      if (!currentTimeElement || !durationElement) {
+        return;
+      }
 
-        infoButton.click();
+      timelineObserver = new MutationObserver(() => {
+        addActualTime(currentTimeElement, vodStartTime);
+        addActualTime(durationElement, vodStartTime);
+      });
 
-        setTimeout(() => {
-          const dateElement = document.querySelector("#vodDetailView li:first-child span");
+      timelineObserver.observe(currentTimeElement, { characterData: true, subtree: true, childList: true });
+    }
 
-          if (dateElement) {
-            const dateText = dateElement.textContent;
-            const uploadDate = dateText.split(' ')[0];
-            const isVod = dateText.includes("~");
-            const [startTime, endTime] = dateText.split(" ~ ");
+    const cursorTimeElement = document.querySelector(".timeline_thumbnail span em");
+    if (!cursorTimeElement) {
+      cursorObserver?.disconnect();
+      cursorObserver = undefined;
+    }
 
-            const existingDiv = document.querySelector("#updateDate");
-            if (existingDiv) {
-              existingDiv.remove();
-            }
+    if (!cursorObserver) {
+      if (cursorTimeElement) {
+        cursorTimeElement.style.whiteSpace = "nowrap";
 
-            const newDiv = document.createElement("div");
-            newDiv.id = "updateDate";
-            newDiv.style.display = "inline-block";
-            newDiv.style.marginLeft = "8px";
-            newDiv.style.cursor = "pointer";
-            newDiv.textContent = uploadDate;
+        cursorObserver = new MutationObserver(() => {
+          addActualTime(cursorTimeElement, vodStartTime);
+        });
 
-            newDiv.addEventListener("click", () => {
-              navigator.clipboard.writeText(uploadDate).then(() => {
-                newDiv.style.transition = "color 0.3s ease";
-                newDiv.style.color = "#ff6347";
-
-                setTimeout(() => {
-                  newDiv.style.color = "";
-                }, 500);
-              }).catch(err => {
-                console.error("복사 실패:", err);
-              });
-            });
-
-            if (isVod) {
-              const vodStartTime = new Date(startTime);
-              const currentTimeElement = document.querySelector(".time-current");
-              const durationElement = document.querySelector(".time-duration");
-              const cursorTimeElement = document.querySelector(".timeline_thumbnail span em");
-
-              const timeObserver = new MutationObserver(() => {
-                if (currentTimeElement) {
-                  addActualTime(currentTimeElement, vodStartTime);
-                }
-                if (cursorTimeElement) {
-                  console.log(cursorTimeElement.textContent);
-                  addActualTime(cursorTimeElement, vodStartTime);
-                }
-              });
-
-              addActualTime(currentTimeElement, vodStartTime);
-              addActualTime(durationElement, vodStartTime);
-              addActualTime(cursorTimeElement, vodStartTime);
-
-              if (currentTimeElement) {
-                timeObserver.observe(currentTimeElement, { characterData: true, childList: true, subtree: true });
-              }
-
-              if (cursorTimeElement) {
-                timeObserver.observe(cursorTimeElement, { characterData: true, childList: true, subtree: true });
-              }
-            }
-
-            viewerCountElement.parentNode.insertBefore(newDiv, viewerCountElement.nextSibling);
-          }
-
-          observer.observe(document.body, { childList: true, subtree: true });
-        }, 500);
+        cursorObserver.observe(cursorTimeElement, { characterData: true, subtree: true, childList: true });
       }
     }
   });
@@ -89,18 +46,11 @@ const observer = new MutationObserver((mutations) => {
 
 observer.observe(document.body, { childList: true, subtree: true });
 
-setInterval(() => {
-  if (location.href !== lastUrl) {
-    lastUrl = location.href;
-    isDone = false;
-    const existingDiv = document.querySelector("#updateDate");
-    if (existingDiv) {
-      existingDiv.remove();
-    }
-  }
-}, 1000);
-
 function addActualTime(element, startTime) {
+  if (!startTime) {
+    return;
+  }
+
   const originalTime = element.textContent;
   if (!originalTime.includes("(")) {
     const [hours, minutes, seconds] = originalTime.split(":").map(Number);
@@ -112,5 +62,66 @@ function addActualTime(element, startTime) {
     const secondsStr = String(actualTime.getSeconds()).padStart(2, "0");
 
     element.textContent = `${originalTime} (${hoursStr}:${minutesStr}:${secondsStr})`;
+  }
+}
+
+async function fetchVodStartTime() {
+  const settingButton = document.querySelector('button.btn_setting');
+  settingButton.click();
+
+  await new Promise((resolve) => setTimeout(resolve, 200));
+
+  const settingListButtons = document.querySelectorAll('.setting_list button');
+  let broadcastInfoButton = undefined;
+  for (let button of settingListButtons) {
+    const span = button.querySelector('span');
+    if (span && span.textContent.trim() === "방송 정보") {
+      broadcastInfoButton = button;
+      break;
+    }
+  }
+  broadcastInfoButton?.click();
+
+  await new Promise((resolve) => setTimeout(resolve, 200));
+
+  const regDateElement = document.querySelector('.broadcast_info_layer dd');
+  const regDate = regDateElement.textContent.split(' ~ ')[0];
+
+  const settingBox = document.querySelector('.setting_box');
+  settingBox.classList.remove('on');
+
+  console.log(`hwang :: [fetchVodStartTime] regDate: ${regDate}`);
+
+  vodStartTime = new Date(regDate);
+}
+
+function addRealtimeElement() {
+
+  const dependItem = document.querySelector('.depend_item');
+  const subscribeItemLi = document.querySelector('.subscribe');
+
+  if (dependItem && subscribeItemLi) {
+    const newButtonLi = document.createElement('li'); // 새로운 li 요소
+    const newButton = document.createElement('button'); // 버튼 생성
+
+    newButton.className = 'realtime'; // 클래스명 설정
+    newButton.setAttribute('tip', '실제 시간 표시'); // tip 속성 설정
+    newButton.type = 'button';
+    newButton.innerText = '시간';
+    newButton.style.color = '#007bff';
+    newButton.addEventListener('click', () => {
+      void fetchVodStartTime().then(() => {
+        const currentTimeElement = document.querySelector(".time-current");
+        const durationElement = document.querySelector(".time-duration");
+
+        if (currentTimeElement && durationElement) {
+          addActualTime(currentTimeElement, vodStartTime);
+          addActualTime(durationElement, vodStartTime);
+        }
+      });
+    });
+
+    newButtonLi.appendChild(newButton); // 버튼을 li에 추가
+    dependItem.insertBefore(newButtonLi, subscribeItemLi); // subscribe 앞에 li 삽입
   }
 }
