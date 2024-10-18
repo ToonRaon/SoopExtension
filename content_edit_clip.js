@@ -28,23 +28,37 @@ const observer = new MutationObserver((mutations) => {
       });
     }
 
-    // 복사하기 버튼 추가 및 기능
-    if (shareBox && !shareBox.querySelector(".btn_copy")) {
-      const copyButton = document.createElement("button");
-      copyButton.className = "btn_copy";
-      copyButton.type = "button";
-      copyButton.innerHTML = "<em></em><span>복사하기</span>";
-      copyButton.style.marginLeft = "8px";
+    if (shareBox) {
+      // 클립 URL 바로가기 버튼
+      if (!shareBox.querySelector(".btn_quick")) {
+        const quickButton = createButton('바로가기', 'btn_quick', () => {
+          const urlButton = document.querySelector(".url");
+          if (urlButton) {
+            urlButton.click();
 
-      copyButton.addEventListener("click", () => {
-        const urlButton = document.querySelector(".url");
+            setTimeout(() => {
+              navigator.clipboard.readText().then((clipUrl) => {
+                if (clipUrl) {
+                  window.close();
+                  window.open(clipUrl, "_blank").focus();
+                }
+              });
+            }, 500);
+          }
+        });
+        shareBox.appendChild(quickButton);
+      }
 
-        if (urlButton) {
-          urlButton.click();
-        }
-      });
-
-      shareBox.appendChild(copyButton);
+      // 복사하기 버튼
+      if (!shareBox.querySelector(".btn_copy")) {
+        const copyButton = createButton('복사하기', 'btn_copy', () => {
+          const urlButton = document.querySelector(".url");
+          if (urlButton) {
+            urlButton.click();
+          }
+        });
+        shareBox.appendChild(copyButton);
+      }
     }
   });
 });
@@ -53,3 +67,24 @@ observer.observe(document.body, {
   childList: true,
   subtree: true,
 });
+
+const createButton = (text, className, onClick) => {
+  const button = document.createElement("button");
+  button.type = "button";
+  button.innerHTML = `<span>${text}</span>`;
+  button.className = className;
+  button.style.justifyContent = 'flex-end';
+  button.style.height = '44px';
+  button.style.padding = '0 20px';
+  button.style.marginLeft = '8px';
+  button.style.verticalAlign = 'top';
+  button.style.borderRadius = '10px';
+  button.style.fontSize = '16px';
+  button.style.border = '1px solid rgba(0, 0, 0, 0)';
+  button.style.borderColor = '#d5d7dc';
+  button.style.color = '#17191c';
+  button.style.transition = 'all 0.2s ease-in-out';
+  button.addEventListener('click', onClick);
+
+  return button;
+}
