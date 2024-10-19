@@ -14,17 +14,7 @@ const observer = new MutationObserver((mutations) => {
 
       titleElement.addEventListener("click", () => {
         let textToCopy = titleElement.textContent.replace("[클립]", "").trim();
-
-        navigator.clipboard.writeText(textToCopy).then(() => {
-          titleElement.style.transition = "color 0.3s ease";
-          titleElement.style.color = "#ff6347";
-
-          setTimeout(() => {
-            titleElement.style.color = "";
-          }, 500);
-        }).catch(err => {
-          console.error("복사 실패:", err);
-        });
+        setElementAsCopyButton(titleElement, textToCopy);
       });
     }
 

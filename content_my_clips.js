@@ -16,22 +16,8 @@ const observer = new MutationObserver((mutations) => {
           titleLink.addEventListener("click", (event) => {
             event.preventDefault();
 
-            let titleText = titleLink.textContent.trim();
-            if (titleText.startsWith("[클립]") || titleText.startsWith("[캐치]")) {
-              titleText = titleText.replace("[클립]", "").trim();
-              titleText = titleText.replace("[캐치]", "").trim();
-            }
-
-            navigator.clipboard.writeText(titleText).then(() => {
-              titleLink.style.transition = "color 0.3s ease";
-              titleLink.style.color = "#ff6347";
-
-              setTimeout(() => {
-                titleLink.style.color = "";
-              }, 500);
-            }).catch((err) => {
-              console.error("복사 실패:", err);
-            });
+            let titleText = titleLink.textContent.replace("[클립]", "").replace("[캐치]", "").trim();
+            setElementAsCopyButton(titleLink, titleText);
           });
         });
 
