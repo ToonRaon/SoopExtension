@@ -1,6 +1,8 @@
 const setElementAsCopyButton = (element, string) => {
   element.style.cursor = "pointer";
-  element.addEventListener('click', () => {
+  element.addEventListener('click', (e) => {
+    e.preventDefault();
+
     navigator.clipboard.writeText(string).then(() => {
       element.style.transition = "color 0.3s ease";
       element.style.color = "#ff6347";

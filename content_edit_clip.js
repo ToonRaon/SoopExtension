@@ -10,12 +10,8 @@ const observer = new MutationObserver((mutations) => {
 
     // 타이틀 복사 기능
     if (titleElement) {
-      titleElement.style.cursor = "pointer";
-
-      titleElement.addEventListener("click", () => {
-        let textToCopy = titleElement.textContent.replace("[클립]", "").trim();
-        setElementAsCopyButton(titleElement, textToCopy);
-      });
+      let textToCopy = titleElement.textContent.replace("[클립]", "").trim();
+      setElementAsCopyButton(titleElement, textToCopy);
     }
 
     if (shareBox) {

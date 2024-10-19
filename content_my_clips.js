@@ -13,12 +13,8 @@ const observer = new MutationObserver((mutations) => {
         const dateElements = node.querySelectorAll(".vod-info .date");
 
         titleLinks.forEach((titleLink) => {
-          titleLink.addEventListener("click", (event) => {
-            event.preventDefault();
-
-            let titleText = titleLink.textContent.replace("[클립]", "").replace("[캐치]", "").trim();
-            setElementAsCopyButton(titleLink, titleText);
-          });
+          let titleText = titleLink.textContent.replace("[클립]", "").replace("[캐치]", "").trim();
+          setElementAsCopyButton(titleLink, titleText);
         });
 
         dateElements.forEach((dateElement) => {
