@@ -21,7 +21,8 @@
         "https://vod.sooplive.co.kr/player/*"
       ],
       "js": [
-        "content_in_clip.js"
+        "content_in_clip.js",
+        "utils/utils.js"
       ]
     },
     {
@@ -31,7 +32,8 @@
         "https://ch.sooplive.co.kr/*/vods*"
       ],
       "js": [
-        "content_my_clips.js"
+        "content_my_clips.js",
+        "utils/utils.js"
       ]
     },
     {
@@ -40,7 +42,8 @@
         "https://www.sooplive.co.kr/*"
       ],
       "js": [
-        "content_main_page_to_vod.js"
+        "content_main_page_to_vod.js",
+        "utils/utils.js"
       ]
     },
     {
@@ -49,7 +52,8 @@
         "https://stbbs.sooplive.co.kr/vodclip/*"
       ],
       "js": [
-        "content_edit_clip.js"
+        "content_edit_clip.js",
+        "utils/utils.js"
       ]
     },
     {
@@ -57,7 +61,8 @@
         "https://play.sooplive.co.kr/*"
       ],
       "js": [
-        "content_live.js"
+        "content_live.js",
+        "utils/utils.js"
       ]
     }
   ]

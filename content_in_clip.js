@@ -4,6 +4,15 @@ let cursorObserver = undefined;
 
 const observer = new MutationObserver((mutations) => {
   mutations.forEach(() => {
+    // 제목 클릭시 복사
+    const element = document.querySelector('.broadcast_title:not(.processed)');
+    if (element) {
+      element.classList.add('processed');
+      const textToCopy = element.textContent.replace("[클립]", "").replace("[캐치]", "").trim();
+      setElementAsCopyButton(element, textToCopy);
+    }
+
+    // 현실 시간 보여주기
     if (!document.querySelector('.realtime')) {
       addRealtimeElement();
     }
