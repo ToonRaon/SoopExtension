@@ -10,7 +10,7 @@ const observer = new MutationObserver((mutations) => {
 
     // 타이틀 복사 기능
     if (titleElement) {
-      let textToCopy = titleElement.textContent.replace("[클립]", "").trim();
+      let textToCopy = titleElement.textContent.replace("[클립]", "").replace("[캐치]", "").trim();
       setElementAsCopyButton(titleElement, textToCopy);
     }
 
