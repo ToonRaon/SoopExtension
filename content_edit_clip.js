@@ -45,6 +45,12 @@ const observer = new MutationObserver((mutations) => {
         });
         shareBox.appendChild(copyButton);
       }
+
+      // 공유하기 제거
+      const shareButton = shareBox.querySelector(".btn_share");
+      if (shareButton) {
+        shareButton.remove();
+      }
     }
   });
 });
