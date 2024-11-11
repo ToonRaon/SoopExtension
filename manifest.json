@@ -64,6 +64,15 @@
         "content_live.js",
         "utils/utils.js"
       ]
+    },
+    {
+      "matches": [
+        "https://cafe.naver.com/*"
+      ],
+      "js": [
+        "content_cafe.js",
+        "utils/utils.js"
+      ]
     }
   ]
 }
