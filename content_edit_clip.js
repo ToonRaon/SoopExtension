@@ -3,6 +3,7 @@ const observer = new MutationObserver((mutations) => {
     const titleElement = document.querySelector(".broadcast_title");
     const shareBox = document.querySelector(".share_box");
     const titleContainerElement = document.querySelector(".u_clip_title.type2");
+    const nickNameElement = document.querySelector(".nickname");
 
     if (titleContainerElement) {
       titleContainerElement.style.right = '320px';
@@ -10,6 +11,7 @@ const observer = new MutationObserver((mutations) => {
 
     // 타이틀 복사 기능
     if (titleElement) {
+      titleElement.style.width = '350px';
       let textToCopy = titleElement.textContent.replace("[클립]", "").replace("[캐치]", "").trim();
       setElementAsCopyButton(titleElement, textToCopy);
     }
@@ -24,10 +26,10 @@ const observer = new MutationObserver((mutations) => {
           setTimeout(() => {
             navigator.clipboard.readText().then((clipUrl) => {
               if (clipUrl) {
-
                 const data = {
                   title: titleElement.textContent.replace("[클립]", "").replace("[캐치]", "").trim(),
-                  clipUrl: clipUrl
+                  clipUrl: clipUrl,
+                  streamer: nickNameElement.textContent,
                 };
                 navigator.clipboard.writeText(JSON.stringify(data)).then(() => {
                   const cafeUrl = `https://cafe.naver.com/ca-fe/cafes/30723072/menus/86/articles/write?boardType=L`;
